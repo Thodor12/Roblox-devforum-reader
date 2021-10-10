@@ -1,0 +1,33 @@
+{
+  "name": "devforum-reader",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Thom van den Akker",
+  "private": true,
+  "scripts": {
+    "scheduler:prod": "node dist/scheduler.js",
+    "scheduler:test": "node -r dotenv/config dist/scheduler.js",
+    "single:test": "node -r dotenv/config dist/single.js",
+    "build": "tsc",
+    "watch": "tsc-watch",
+    "clean": "rimraf dist",
+    "heroku-postbuild": "npm run build"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^16.2.6",
+    "@types/node": "^14.14.31",
+    "@types/node-cron": "^2.0.3",
+    "dotenv": "^8.2.0",
+    "node-ts": "^5.1.1",
+    "rimraf": "^3.0.2",
+    "tsc-watch": "^4.2.9",
+    "typescript": "^4.2.2"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "jsdom": "^16.5.3",
+    "moment": "^2.29.1",
+    "node-color-log": "^5.2.0",
+    "node-cron": "^2.0.3"
+  }
+}
