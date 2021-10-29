@@ -37,14 +37,14 @@ export default class Executor {
     }
 
     async loadCommands() {
-        // this.commands.push(new RobloxUptimeCommand());
-        // this.commands.push(new BlogUptimeCommand());
-        // this.commands.push(new DevforumUptimeCommand());
+        this.commands.push(new RobloxUptimeCommand());
+        this.commands.push(new BlogUptimeCommand());
+        this.commands.push(new DevforumUptimeCommand());
         this.commands.push(new StatusPageMonitorCommand());
-        // this.commands.push(new BlogReaderProductTechCommand());
-        // this.commands.push(new ReadDevforumAnnouncementsCommand());
-        // this.commands.push(new ReadDevforumReleaseNotesCommand());
-        // this.commands.push(new ReadDevforumNewsAndAlertsCommand());
+        this.commands.push(new BlogReaderProductTechCommand());
+        this.commands.push(new ReadDevforumAnnouncementsCommand());
+        this.commands.push(new ReadDevforumReleaseNotesCommand());
+        this.commands.push(new ReadDevforumNewsAndAlertsCommand());
 
         this.commands.sort((a, b) => {
             let aRequiresB = a.requiredCommands?.some(c => c == b.name) ?? false;
