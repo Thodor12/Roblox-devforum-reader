@@ -7,8 +7,9 @@ export default interface Command {
 
     name: string;
     displayName: string;
-    requiredCommands?: Array<string>;
+    requiredCommands: Array<string>;
 
+    onLoad(logger: Logger): Promise<void>;
     execute(logger: Logger): Promise<ExecutionStatus>;
 
 };

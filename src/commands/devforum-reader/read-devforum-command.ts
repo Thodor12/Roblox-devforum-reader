@@ -18,15 +18,17 @@ export default abstract class ReadDevforumCommand implements Command {
     private poster: DiscordWebhookPoster;
     private lastRunTime: moment.Moment = moment.utc();
 
-    private category: Category = null;
+    private category: Category | null = null;
 
     requiredCommands: Array<string> = [];
 
     constructor() {
         this.reader = new DiscourseApiReader("https://devforum.roblox.com/");
-        this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS.split(","));
+        this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS?.split(",") ?? []);
         this.requiredCommands.push("devforum_uptime");
     }
+
+    async onLoad(): Promise<void> { }
 
     async execute(logger: Logger): Promise<ExecutionStatus> {
         // Load the category info if not yet set

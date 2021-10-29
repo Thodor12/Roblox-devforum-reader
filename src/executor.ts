@@ -6,9 +6,10 @@ import Logger from "./util/logger";
 import RobloxUptimeCommand from "./commands/uptime/roblox-uptime";
 import BlogUptimeCommand from "./commands/uptime/blog-uptime";
 import DevforumUptimeCommand from "./commands/uptime/devforum-uptime";
+import StatusPageMonitorCommand from "./commands/uptime/status-page-monitor";
 import ReadDevforumAnnouncementsCommand from "./commands/devforum-reader/read-devforum-announcements";
 import ReadDevforumReleaseNotesCommand from "./commands/devforum-reader/read-devforum-releasenotes";
-import ReadDevforumIncidentsCommand from "./commands/devforum-reader/read-devforum-incidents";
+import ReadDevforumNewsAndAlertsCommand from "./commands/devforum-reader/read-devforum-news-alerts";
 import BlogReaderProductTechCommand from "./commands/blog-reader/blog-reader-product-tech-command";
 
 // Command status enum
@@ -33,22 +34,27 @@ export default class Executor {
 
     constructor() {
         this.logger = new Logger();
-        this.registerCommands();
+    }
+
+    async loadCommands() {
+        // this.commands.push(new RobloxUptimeCommand());
+        // this.commands.push(new BlogUptimeCommand());
+        // this.commands.push(new DevforumUptimeCommand());
+        this.commands.push(new StatusPageMonitorCommand());
+        // this.commands.push(new BlogReaderProductTechCommand());
+        // this.commands.push(new ReadDevforumAnnouncementsCommand());
+        // this.commands.push(new ReadDevforumReleaseNotesCommand());
+        // this.commands.push(new ReadDevforumNewsAndAlertsCommand());
+
         this.commands.sort((a, b) => {
             let aRequiresB = a.requiredCommands?.some(c => c == b.name) ?? false;
             let bRequiresA = b.requiredCommands?.some(c => c == a.name) ?? false;
             return aRequiresB ? 1 : bRequiresA ? -1 : 0;
         });
-    }
 
-    private registerCommands() {
-        this.commands.push(new RobloxUptimeCommand());
-        this.commands.push(new BlogUptimeCommand());
-        this.commands.push(new DevforumUptimeCommand());
-        this.commands.push(new BlogReaderProductTechCommand());
-        this.commands.push(new ReadDevforumAnnouncementsCommand());
-        this.commands.push(new ReadDevforumReleaseNotesCommand());
-        this.commands.push(new ReadDevforumIncidentsCommand());
+        this.commands.forEach((cmd) => {
+            cmd.onLoad(this.logger);
+        });
     }
 
     async runAllCommands(identifier: string): Promise<void> {

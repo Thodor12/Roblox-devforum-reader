@@ -3,6 +3,4 @@ node_modules/
 dist/
 
 # Exclude the environment files
-.env.local
-.env.development.local
-.env.production.local
+.env

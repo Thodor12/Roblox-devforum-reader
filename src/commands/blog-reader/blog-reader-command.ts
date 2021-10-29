@@ -21,10 +21,12 @@ export default abstract class ReadBlogCommand implements Command {
     private lastRunTime: moment.Moment = moment.utc();
 
     constructor() {
-        this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS.split(","));
+        this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS?.split(",") ?? []);
         this.reader = new BlogApiReader();
         this.requiredCommands.push("blog_uptime");
     }
+
+    async onLoad(): Promise<void> { }
 
     async execute(logger: Logger): Promise<ExecutionStatus> {
         logger.info(`Looking for blog posts posted after ${this.lastRunTime}.`);

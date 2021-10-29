@@ -55,7 +55,7 @@ export default class DiscourseApiReader {
      * @param categoryId The category ID you are trying to read the data from.
      * @param since A moment.js date object used to check which topics to get.
      */
-    async getTopicsInCategory(categoryId: number, since: moment.Moment = null): Promise<Array<Topic>> {
+    async getTopicsInCategory(categoryId: number, since: moment.Moment): Promise<Array<Topic>> {
         let result = await axios.get(new URL(`/c/${categoryId}.json`, this.baseUrl).href);
         let arr: Array<Topic> = [];
 

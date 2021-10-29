@@ -2,7 +2,7 @@
 import axios, { AxiosResponse } from "axios";
 import { ExecutionStatus } from "../../executor";
 import DiscordWebhookPoster from "../../util/discord-webhook-poster";
-import logger from "../../util/logger";
+import Logger from "../../util/logger";
 import Command from "../command";
 
 // Export class
@@ -13,7 +13,7 @@ export default abstract class UptimeCommand implements Command {
 
     abstract name: string;
     abstract displayName: string;
-    requiredCommands?: string[];
+    requiredCommands: string[] = [];
 
     abstract monitorName: string;
     abstract monitorUrl: string;
@@ -22,18 +22,23 @@ export default abstract class UptimeCommand implements Command {
 
     private poster: DiscordWebhookPoster;
 
-    public UptimeCommand() {
-        this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS.split(","));
+    constructor() {
+        this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS?.split(",") ?? []);
     }
 
-    async execute(logger: logger): Promise<ExecutionStatus> {
-        let response: AxiosResponse<any>;
+    async onLoad(): Promise<void> { }
+
+    async execute(logger: Logger): Promise<ExecutionStatus> {
+        let response: AxiosResponse<any> | null = null;
         try {
             response = await axios.head(this.monitorUrl, { timeout: this.timeoutMillis, validateStatus: () => true });
         } catch (ex) {
             logger.warning(ex);
         }
 
+        if (response === null) {
+            return ExecutionStatus.Failed;
+        }
         let status = response.status >= 200 && response.status < 300 ? ExecutionStatus.Success : ExecutionStatus.Failed;
 
         if ((status === ExecutionStatus.Failed && this.isOnline === true) ||

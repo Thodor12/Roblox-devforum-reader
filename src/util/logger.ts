@@ -9,33 +9,33 @@ const ErrorColor = "red";
 // Export class
 export default class Logger {
 
-    private defaultIdentifier: string;
+    private defaultIdentifier: string | undefined;
 
-    constructor(identifier: string = null) {
+    constructor(identifier?: string) {
         this.defaultIdentifier = identifier;
 
         NodeLogger.setLevel("error");
     }
 
-    private formatMessage(message: string, identifier: string): string {
-        let id = identifier !== null ? identifier : this.defaultIdentifier;
+    private formatMessage(message: string, identifier: string | undefined): string {
+        let id = identifier !== undefined ? identifier : this.defaultIdentifier;
         let msg = message.length > 0 ? message.trim() : message;
-        return id == null ? msg : `${id.trim()} - ${msg}`;
+        return id === undefined ? msg : `${id.trim()} - ${msg}`;
     }
 
-    plain(message: string, identifier: string = null) {
+    plain(message: string, identifier?: string) {
         NodeLogger.color(InfoColor).log(this.formatMessage(message, identifier));
     }
 
-    info(message: string, identifier: string = null) {
+    info(message: string, identifier?: string) {
         NodeLogger.color(InfoColor).log("INFO: " + this.formatMessage(message, identifier));
     }
 
-    warning(message: string, identifier: string = null) {
+    warning(message: string, identifier?: string) {
         NodeLogger.color(WarningColor).bold().log("WARNING: " + this.formatMessage(message, identifier));
     }
 
-    error(message: string, identifier: string = null) {
+    error(message: string, identifier?: string) {
         NodeLogger.color(ErrorColor).bold().log("ERROR: " + this.formatMessage(message, identifier));
     }
 };

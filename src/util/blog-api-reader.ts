@@ -8,7 +8,7 @@ export interface BlogPost {
     name: string;
     description: string;
     postedAt: moment.Moment;
-    image: string;
+    image?: string;
     href: string;
 };
 
@@ -27,7 +27,7 @@ export default class BlogApiReader {
      * @param categoryId The category ID you are trying to read the data from.
      * @param since A moment.js date object used to check which topics to get.
      */
-    async getBlogPostsInCategory(categoryId: number, since: moment.Moment = null): Promise<Array<BlogPost>> {
+    async getBlogPostsInCategory(categoryId: number, since: moment.Moment): Promise<Array<BlogPost>> {
         let result = await axios.get(new URL(`/wp-json/wp/v2/posts?categories=${categoryId}`, this.baseUrl).href);
         let arr: Array<BlogPost> = [];
 
@@ -35,7 +35,7 @@ export default class BlogApiReader {
             let datePosted = moment(post.date_gmt, moment.ISO_8601);
             if (since === null || datePosted.isAfter(since)) {
                 // Fetch media info
-                let mediaLink: string = null;
+                let mediaLink: string | undefined = undefined;
                 try {
                     let mediaSection = post._links["wp:featuredmedia"].shift();
                     if (mediaSection != null) {
@@ -57,7 +57,7 @@ export default class BlogApiReader {
      * @param post The untyped post object
      * @param imageLink The header image (if any)
      */
-    private createBlogPost(post: any, imageLink: string): BlogPost {
+    private createBlogPost(post: any, imageLink?: string): BlogPost {
         return {
             name: post.title.rendered,
             description: HtmlSanitizer.Sanitize(post.excerpt.rendered),

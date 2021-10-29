@@ -6,6 +6,8 @@ import Executor from "./executor";
 const executor = new Executor();
 
 // Start the scheduler
-schedule("* * * * *", async () => {
-    await executor.runAllCommands(new Date().getTime().toString());
+executor.loadCommands().then(() => {
+    schedule("* * * * *", async () => {
+        await executor.runAllCommands(new Date().getTime().toString());
+    });
 });

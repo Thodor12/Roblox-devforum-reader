@@ -13,10 +13,17 @@ export interface Embed {
     author?: {
         name?: string;
         icon_url?: string;
-    },
+    };
     image?: {
         url?: string;
-    }
+    };
+    fields?: Array<EmbedField>;
+}
+
+export interface EmbedField {
+    name: string;
+    value: string;
+    inline?: boolean;
 }
 
 export interface Options {
@@ -35,6 +42,7 @@ export default class DiscordWebhookPoster {
         } else {
             this.urls = urls;
         }
+        this.urls = this.urls.filter(f => f.startsWith("http://") || f.startsWith("https://"))
     }
 
     async postEmbeds(embeds: Array<Embed>, options?: Options) {

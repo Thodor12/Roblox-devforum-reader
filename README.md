@@ -4,8 +4,8 @@ This tool is used to automatically get updates in your Discord server from speci
 
 By default these categories include several channels on the devforum:
 - Announcements
+- News & Alerts
 - Release notes
-- Developer indicident reports
 
 It also includes one category on the Roblox blog post:
 - Product & Tech
