@@ -6,7 +6,7 @@ export default class ReadDevforumAnnouncementsCommand extends ReadDevforumComman
 
     name: string = "devforum_announcements";
     displayName: string = "Devforum announcements";
-    categoryId: number = 55;
+    categoryId: number = 36;
     maxDescriptionLength: number = 250;
 
 };
