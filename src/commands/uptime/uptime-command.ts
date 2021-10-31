@@ -1,5 +1,6 @@
 // Define imports
 import axios, { AxiosResponse } from "axios";
+import moment from "moment";
 import { ExecutionStatus } from "../../executor";
 import DiscordWebhookPoster from "../../util/discord-webhook-poster";
 import Logger from "../../util/logger";
@@ -26,37 +27,56 @@ export default abstract class UptimeCommand implements Command {
         this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS?.split(",") ?? []);
     }
 
-    async onLoad(): Promise<void> { }
+    async onLoad(logger: Logger): Promise<void> {
+        this.isOnline = this.checkOnline(await this.getStatus(logger));
+    }
 
     async execute(logger: Logger): Promise<ExecutionStatus> {
-        let response: AxiosResponse<any> | null = null;
-        try {
-            response = await axios.head(this.monitorUrl, { timeout: this.timeoutMillis, validateStatus: () => true });
-        } catch (ex) {
-            logger.warning(ex);
-        }
-
-        if (response === null) {
-            return ExecutionStatus.Failed;
-        }
-        let status = response.status >= 200 && response.status < 300 ? ExecutionStatus.Success : ExecutionStatus.Failed;
+        const statusCode = await this.getStatus(logger);
+        const status = this.checkOnline(statusCode) ? ExecutionStatus.Success : ExecutionStatus.Failed;
 
         if ((status === ExecutionStatus.Failed && this.isOnline === true) ||
             status === ExecutionStatus.Success && this.isOnline === false) {
             // Reported status is failed, but we are currently online, report down
             // OR
             // Reported status is success, but we are currently down, report up
-            this.sendUptimeMessage(!this.isOnline, "HTTP " + response.status + " - " + response.statusText);
+            this.sendUptimeMessage(!this.isOnline, statusCode);
         }
 
-        this.isOnline = status == ExecutionStatus.Success;
+        this.isOnline = status === ExecutionStatus.Success;
         return status;
     }
 
-    private sendUptimeMessage(isOnline: boolean, statusCode: string) {
+    private async getStatus(logger: Logger): Promise<number> {
+        let response: AxiosResponse<any>;
+        try {
+            response = await axios.head(this.monitorUrl, { timeout: this.timeoutMillis, validateStatus: () => true });
+        } catch (ex) {
+            logger.warning(ex);
+            return 503;
+        }
+        return response.status;
+    }
+
+    private checkOnline(statusCode: number): boolean {
+        return statusCode >= 200 && statusCode < 400;
+    }
+
+    private sendUptimeMessage(isOnline: boolean, statusCode: number) {
         this.poster.postEmbeds([{
-            title: `Monitor is ${isOnline ? "UP" : "DOWN"}`,
-            description: statusCode,
+            title: this.monitorName,
+            url: this.monitorUrl,
+            fields: [
+                {
+                    name: "Status",
+                    value: isOnline ? "UP" : "DOWN"
+                },
+                {
+                    name: "Response code",
+                    value: statusCode.toString()
+                }
+            ],
+            timestamp: moment().toISOString(),
             color: isOnline ? UptimeCommand.GREEN_STATUS_CODE : UptimeCommand.RED_STATUS_CODE
         }], {
             name: this.monitorName
