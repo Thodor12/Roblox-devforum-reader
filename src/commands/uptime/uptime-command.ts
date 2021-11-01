@@ -63,6 +63,7 @@ export default abstract class UptimeCommand implements Command {
     }
 
     private sendUptimeMessage(isOnline: boolean, statusCode: number) {
+        if (!process.env.SHOULD_LOG_UPTIME) { return; }
         this.poster.postEmbeds([{
             title: this.monitorName,
             url: this.monitorUrl,
