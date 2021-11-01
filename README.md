@@ -40,9 +40,12 @@ SHOULD_LOG_UPTIME=true/false
 DISCORD_WEBHOOKS: The system supports multiple webhooks separate by a comma, all commands use this webhook to send notifications to.
 SHOULD_LOG_UPTIME: Whether or not uptime commands should send notifications to the Discord webhooks aswell.
 
+First you need to make sure to compile the program, you can use either `npm run build` to perform a single build using `tsc` or
+run `npm run watch` to start `tsc` in watch mode for incremental compilation.
+
 There's three ways to run the program:
-- `npm run single:test` runs the program one time using `.env.local` configuration values
-- `npm run scheduler:test` runs the program on a scheduler using `.env.local` configuration values
+- `npm run single:test` runs the program one time using `.env` configuration values
+- `npm run scheduler:test` runs the program on a scheduler using `.env` configuration values
 - `npm run scheduler:prod` runs the program on a scheduler using the system environment
 
 The first two can be used in a non-production environment, the last one should be used in production.
