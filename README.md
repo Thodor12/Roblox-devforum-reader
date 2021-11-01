@@ -10,6 +10,12 @@ By default these categories include several channels on the devforum:
 It also includes one category on the Roblox blog post:
 - Product & Tech
 
+It also contains uptime logging for the main site, devforum and the blog page.
+These can also send logging notifications but they can be turned off aswell (see Running Locally).
+
+Last there is a monitor for the status page of Roblox, if any incident occurs on Roblox you will
+also be notified.
+
 ## Design
 This system was designed to ensure a simple, non persistent way of keep track of the posts, this system can be hosted
 completely standalone and does not require a database to operate, it only has to be able to run 24/7.
@@ -26,11 +32,13 @@ on either of those sites.
 Entirely custom commands are also possible but you will have to scaffold the logic for loading the posts yourself.
 
 ## Running locally
-If you want to test the system locally you will need to create a `.env.local` file and put the following inside of it:
+If you want to test the system locally you will need to create a `.env` file and put the following inside of it:
 ```
 DISCORD_WEBHOOKS=<your webhook url>
+SHOULD_LOG_UPTIME=true/false
 ```
-The system supports multiple webhooks separate by a comma.
+DISCORD_WEBHOOKS: The system supports multiple webhooks separate by a comma, all commands use this webhook to send notifications to.
+SHOULD_LOG_UPTIME: Whether or not uptime commands should send notifications to the Discord webhooks aswell.
 
 There's three ways to run the program:
 - `npm run single:test` runs the program one time using `.env.local` configuration values
