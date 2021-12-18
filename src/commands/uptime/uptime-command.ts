@@ -35,7 +35,7 @@ export default abstract class UptimeCommand implements Command {
         const statusCode = await this.getStatus(logger);
         const status = this.checkOnline(statusCode) ? ExecutionStatus.Success : ExecutionStatus.Failed;
 
-        if (true || (status === ExecutionStatus.Failed && this.isOnline === true) ||
+        if ((status === ExecutionStatus.Failed && this.isOnline === true) ||
             status === ExecutionStatus.Success && this.isOnline === false) {
             // Reported status is failed, but we are currently online, report down
             // OR
