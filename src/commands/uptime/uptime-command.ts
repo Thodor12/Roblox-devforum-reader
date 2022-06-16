@@ -32,6 +32,8 @@ export default abstract class UptimeCommand implements Command {
     }
 
     async execute(logger: Logger): Promise<ExecutionStatus> {
+        console.log("Endpoint: " + this.monitorUrl);
+        
         const statusCode = await this.getStatus(logger);
         const status = this.checkOnline(statusCode) ? ExecutionStatus.Success : ExecutionStatus.Failed;
 
