@@ -25,7 +25,7 @@ export default abstract class ReadDevforumCommand implements Command {
     constructor() {
         this.reader = new DiscourseApiReader("https://devforum.roblox.com/");
         this.poster = new DiscordWebhookPoster(process.env.DISCORD_WEBHOOKS?.split(",") ?? []);
-        this.requiredCommands.push("devforum_uptime");
+        //this.requiredCommands.push("devforum_uptime");
     }
 
     async onLoad(): Promise<void> { }
