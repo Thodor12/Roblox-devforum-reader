@@ -7,6 +7,6 @@ export default class DevforumUptimeCommand extends UptimeCommand {
     name: string = "devforum_uptime";
     displayName: string = "Devforum uptime";
     monitorName: string = "Devforum uptime monitor";
-    monitorUrl: string = "https://devforum.roblox.com/";
+    monitorUrl: string = "https://devforum.roblox.com/srv/status";
 
 };
